@@ -1,10 +1,12 @@
+import mongoose from "mongoose";
 import { connections } from "../db";
-import { getLoggingModel, Logging } from "../models/logging.model";
+import { Logging } from "../models/logging.model";
 
 export const getLogging = async (req: any, res: any) => {
-  // const Logging = getLoggingModel(connections["db2"] as any);
+  // const Logging = getLoggingModel(mongoose.connections?.[1] as any);
   try {
-    const logs = await Logging.find({});
+    const LoggingModel = new Logging().getModel();
+    const logs = await LoggingModel.find({});
     res.json(logs);
   } catch (error) {
     console.info(error);
@@ -14,7 +16,10 @@ export const getLogging = async (req: any, res: any) => {
 };
 
 export const createLogging = async (message: string) => {
-  // const Logging = getLoggingModel(connections["db2"] as any);
-  const log = new Logging({ message });
-  await log.save();
+  try {
+    const LoggingModel = new Logging().getModel();
+    await LoggingModel.create({ message });
+  } catch (error) {
+    console.info(error);
+  }
 };

@@ -7,18 +7,22 @@ interface IConnectToDB {
   uri: string;
 }
 
-export const connectToDB = async (props: IConnectToDB[]) => {
+export const connectToDB = async (props?: IConnectToDB[]) => {
   try {
     const uri = process.env.MONGO_URI1 as string;
     const defaultConnection = await mongoose.connect(uri);
 
-    // console.info("default db connection: ", defaultConnection);
+    console.info("default db connection: ", defaultConnection);
     console.log("Connected to default");
 
-    for (const { dbName, uri } of props) {
-      if (!connections[dbName]) {
-        connections[dbName] = mongoose.createConnection(uri);
-        console.log("Connected to MongoDB: ", dbName);
+    if (props) {
+      for (const { dbName, uri } of props) {
+        if (!connections[dbName]) {
+          connections[dbName] = await mongoose
+            .createConnection(uri)
+            .asPromise();
+          console.log("Connected to MongoDB: ", dbName);
+        }
       }
     }
 
