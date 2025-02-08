@@ -10,8 +10,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 config();
 
-export const db1 = connectToDB("db1", process.env.MONGO_URI1 as string);
-export const db2 = connectToDB("db2", process.env.MONGO_URI2 as string);
+connectToDB([{ dbName: "db2", uri: process.env.MONGO_URI2 as string }]);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

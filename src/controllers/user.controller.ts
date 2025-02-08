@@ -1,10 +1,9 @@
-import { db1 } from "..";
 import { connections } from "../db";
-import { getUserModel } from "../models/user.model";
+import { getUserModel, UserModel as User } from "../models/user.model";
 import { createLogging } from "./logging.controller";
 
 export const getUser = async (req: any, res: any) => {
-  const User = getUserModel(connections["db1"] as any);
+  // const User = getUserModel(connections["db1"] as any);
   // console.info(db1);
   try {
     const users = await User.find();
@@ -17,7 +16,7 @@ export const getUser = async (req: any, res: any) => {
 };
 
 export const createUser = async (req: any, res: any) => {
-  const User = getUserModel(connections["db1"] as any);
+  // const User = getUserModel(connections["db1"] as any);
   const user = new User(req.body);
   try {
     const newUser = await user.save();

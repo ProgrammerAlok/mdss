@@ -2,22 +2,32 @@ import mongoose from "mongoose";
 
 export const connections: any = {};
 
-export const connectToDB = async (dbName: string, uri: string) => {
-  console.info(uri);
-  if (connections[dbName]) {
-    return connections[dbName];
-  }
+interface IConnectToDB {
+  dbName: string;
+  uri: string;
+}
 
+export const connectToDB = async (props: IConnectToDB[]) => {
   try {
-    const connection = await mongoose.createConnection(uri);
+    const uri = process.env.MONGO_URI1 as string;
+    const defaultConnection = await mongoose.connect(uri);
 
-    console.log("Connected to MongoDB: ", dbName);
+    // console.info("default db connection: ", defaultConnection);
+    console.log("Connected to default");
 
-    connections[dbName] = connection;
-    return connection;
+    for (const { dbName, uri } of props) {
+      if (!connections[dbName]) {
+        connections[dbName] = mongoose.createConnection(uri);
+        console.log("Connected to MongoDB: ", dbName);
+      }
+    }
+
+    // connections[dbName] = connection;
+    // return connection;
   } catch (error) {
     console.error("Error connecting to MongoDB", error);
   }
 
-  console.info("connections -> ", connections);
+  // console.info("connections -> ", connections);
+  // console.info("all connections -> ", mongoose.connections);
 };

@@ -10,3 +10,8 @@ export const getLoggingModel = (db: any) => {
   // console.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
   return db.model("Logging", loggingSchema);
 };
+
+export const Logging = mongoose.connections?.[0]?.model(
+  "Logging",
+  loggingSchema
+);
